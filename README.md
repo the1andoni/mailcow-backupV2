@@ -6,7 +6,7 @@ For more informations about the mailcow-backup script, please watch the followin
 
 <h1>Upload to Nextcloud</h1>
 For Upload the Backup to Nextcloud please use the Mailcow_Backup-Nextcloud.sh script and provide the needed information.
-<br>Following information are needed:
+<br><br>Following information are needed:
 <br> - Nextcloud Url
 <br> - Nextcloud User
 <br> - Nextcloud User PW
@@ -16,7 +16,7 @@ I would recommend to create a new User for this Job (like Backup User) and only 
 
 <h1> Upload via sFTP</h1>
 For Upload the Backup via sFTP please use the Mailcow_Backup-FTP.sh script and provide the needed information.
-<br> Following information are needed:
+<br><br> Following information are needed:
 <br> - Server IP
 <br> - Portnumber
 <br> - Username (For FTP User)
