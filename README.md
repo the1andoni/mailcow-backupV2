@@ -11,7 +11,8 @@ For Upload the Backup to Nextcloud please use the Mailcow_Backup-Nextcloud.sh sc
 <br> - Nextcloud User
 <br> - Nextcloud User PW
 
-I would recommend to create a new User for this Job (like Backup User) and only give him Access to the needed Directory, on this Way you make sure that, if you mailserver is hacked, the attacker can see you full Nextcloud files.
+I would recommend to create a new User for this Job (like Backup User) and only give him Access to the needed Directory.
+<br>On this Way you make sure that, if you mailserver is hacked, the attacker can't see you full Nextcloud files.
 
 <h1> Upload via sFTP</h1>
 For Upload the Backup via sFTP please use the Mailcow_Backup-FTP.sh script and provide the needed information.
