@@ -24,6 +24,5 @@ For Upload the Backup via sFTP please use the Mailcow_Backup-FTP.sh script and p
 
 
 <br>
-<br> I will bring more Scripts when i finished the changeing.
 <br>Thx for reading this, and if you like this script, or have any Issues or feedback, leave a message ^^
 <br>Alex / The1AndOni
