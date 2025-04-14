@@ -11,8 +11,8 @@ BACKUP_PATH="$BACKUP_DIR/mailcow-$DATE"
 TAR_FILE="$BACKUP_DIR/mailcow-backup-$DATE.tar.gz"
 
 # Sicherstellen, dass das Backup-Verzeichnis existiert
-mkdir -p "$BACKUP_DIR"
-mkdir -p "$BACKUP_PATH"  # Sicherstellen, dass das Backup-Verzeichnis existiert
+sudo mkdir -p "$BACKUP_DIR"
+sudo mkdir -p "$BACKUP_PATH"  # Sicherstellen, dass das Backup-Verzeichnis existiert
 
 echo "[+] Starte Mailcow-Backup..."
 
