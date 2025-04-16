@@ -9,7 +9,7 @@ FTP_PASS="PASSWORD"
 FTP_CERTIFICATE_FINGERPRINT="sha256// CERTIFICATE-FINGERPRINT"
 FTP_UPLOAD_DIR="/"
 MAILCOW_DIR="/opt/mailcow-dockerized"
-DATE=$(date +"%Y-%m-%d_%H-%M-%S")
+DATE=$(date +"%Y-%m-%d")
 BACKUP_PATH="$BACKUP_DIR/mailcow-$DATE"
 TAR_FILE="$BACKUP_DIR/mailcow-backup-$DATE.tar.gz"
 
