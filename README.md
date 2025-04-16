@@ -21,7 +21,7 @@ For Upload the Backup via sFTP please use the Mailcow_Backup-FTP.sh script and p
 <br> - Portnumber
 <br> - Username (For FTP User)
 <br> - User-PW
-<br> - Certificate-Fingerprint (Only if you need to Upload via SSL, Plain will Upload the File unsecure)
+<br> - Certificate-Fingerprint (Only if you want to Upload via SSL, Plain will Upload the File unsecure)
 <br> - FTP Upload Directory
 
 
