@@ -37,7 +37,21 @@ Mailcow-BackupV2/
 
 ## Installation
 
-1. **Abhängigkeiten installieren**:
+1. **Download Repository**:
+
+   Sie können das Repository mithilfe von GitClone einfach runterladen.
+
+   ```bash
+   git clone https://github.com/the1andoni/mailcow-backupV2.git 
+   ```
+   
+   Anschließend wechseln Sie in das neue Verzeichnis und die Scripte mithilfe folgendes befehles ausführbar machen.
+
+   ```bash
+   chmod +x Mailcow-BackupV2/**/*.sh
+   ```
+
+2. **Abhängigkeiten installieren**:
 
    Sie können die Abhängigkeiten entweder manuell oder mit dem bereitgestellten Skript installieren:
 
@@ -51,7 +65,7 @@ Mailcow-BackupV2/
    sudo ./Dependencies/install_dependencies.sh
    ```
 
-2. **Setup ausführen**:
+3. **Setup ausführen**:
 
    Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und Cronjobs einzurichten:
 
