@@ -1,31 +1,111 @@
-At the Moment the script is doing a backup from the Mailcow Data, via mailcow-backup integrated script, into a nextcloud folder via Nextcloud-User and Nextcloud-User-PW or via sFTP.
-<br>This script will compress this data into an tar.gz file and will Upload them.
+# Mailcow Backup Script V2
 
-For more informations about the mailcow-backup script, please watch the following Link:
-<br>https://docs.mailcow.email/backup_restore/b_n_r-backup
+Ein Bash-Skript zur Sicherung von Mailcow-Daten mit Unterstützung für WebDAV- und FTP-Uploads. Dieses Projekt ermöglicht es, automatisierte Backups zu erstellen, zu verschlüsseln und auf Remote-Server hochzuladen.
 
-<h1>Upload to Nextcloud</h1>
-For Upload the Backup to Nextcloud please use the Mailcow_Backup-Nextcloud.sh script and provide the needed information.
-<br><br>Following information are needed:
-<br> - Nextcloud Url
-<br> - Nextcloud User
-<br> - Nextcloud User PW
-<br><br>
-I would recommend to create a new User for this Job (like Backup User) and only give him Access to the needed Directory.
-<br>On this Way you make sure that, if you mailserver is hacked, the attacker can't see you full Nextcloud files.
+## Ordnerstruktur
 
-<h1> Upload via sFTP</h1>
-For Upload the Backup via sFTP please use the Mailcow_Backup-FTP.sh script and provide the needed information.
-<br><br> Following information are needed:
-<br> - Server IP
-<br> - Portnumber
-<br> - Username (For FTP User)
-<br> - User-PW
-<br> - Certificate-Fingerprint (Only if you want to Upload via SSL, Plain will Upload the File unsecure)
-<br> - FTP Upload Directory
+```
+Mailcow-BackupV2/
+├── mailcow-backup.sh
+├── setup.sh
+├── Dependencies/
+│   ├── Dependencies/dependencies.txt
+│   └── Dependencies/install_dependencies.sh
+├── Configs/
+│   └── (verschlüsselte Konfigurationsdateien)
+└── Upload/  
+     ├── Upload/FTP-Upload.sh  
+     └── Upload/WebDAV-Upload.sh
+```
 
+## Features
 
-<br>
-<hr>
-<br>Thx for reading this, and if you like this script, or have any Issues or feedback, leave a message ^^
-<br>Alex / The1AndOni
+- **Automatisierte Backups**: Erstellt Backups von Mailcow-Daten.
+- **Verschlüsselung**: Konfigurationsdateien werden mit GPG verschlüsselt.
+- **Remote-Upload**: Unterstützt WebDAV und FTP für das Hochladen von Backups.
+- **Cronjob-Integration**: Automatische Planung von Backups und Uploads.
+- **Retention Management**: Löscht alte Backups lokal und remote basierend auf definierten Aufbewahrungszeiten.
+
+## Voraussetzungen
+
+- Betriebssystem: Linux
+- Abhängigkeiten:
+  - `gpg`
+  - `curl`
+  - `cron`
+  - `tar`
+
+## Installation
+
+1. **Abhängigkeiten installieren**:
+
+   Sie können die Abhängigkeiten entweder manuell oder mit dem bereitgestellten Skript installieren:
+
+   ```bash
+   sudo xargs -a Dependencies/dependencies.txt apt install -y
+   ```
+
+   **Oder**:
+
+   ```bash
+   sudo ./Dependencies/install_dependencies.sh
+   ```
+
+2. **Setup ausführen**:
+
+   Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und Cronjobs einzurichten:
+
+   ```bash
+   sudo ./setup.sh
+   ```
+
+   Folgen Sie den Anweisungen im Skript, um die Backup-Methoden (WebDAV/FTP) und Aufbewahrungszeiten zu konfigurieren.
+
+## Nutzung
+
+- **Backup manuell starten**:
+
+  ```bash
+  sudo ./mailcow-backup.sh
+  ```
+
+- **WebDAV-Upload manuell starten**:
+
+  ```bash
+  sudo ./Upload/WebDAV-Upload.sh
+  ```
+
+- **FTP-Upload manuell starten**:
+
+  ```bash
+  sudo ./Upload/FTP-Upload.sh
+  ```
+
+## Konfiguration
+
+Die Konfigurationsdateien werden während des Setups erstellt und verschlüsselt im Ordner `Configs` gespeichert. Sie enthalten sensible Informationen wie Zugangsdaten und sollten niemals unverschlüsselt gespeichert werden.
+
+## Automatisierung
+
+Das Setup-Skript richtet automatisch Cronjobs ein, um Backups und Uploads regelmäßig auszuführen. Sie können die Cronjobs mit dem Befehl `crontab -l` überprüfen.
+
+## Sicherheit
+
+- Die Konfigurationsdateien werden mit GPG verschlüsselt, um sensible Daten zu schützen.
+- Für FTP-Uploads kann ein Zertifikat-Fingerabdruck angegeben werden, um die Verbindung abzusichern.
+
+## Lizenz
+
+Dieses Projekt steht unter der MIT-Lizenz.
+
+---
+
+### Feedback und Beiträge
+
+Beiträge und Verbesserungsvorschläge sind willkommen! Erstellen Sie einfach ein Issue oder einen Pull Request.
+
+---
+
+### Autor
+
+Erstellt von [The1AndOni](https://github.com/The1AndOni).
