@@ -51,7 +51,13 @@ Mailcow-BackupV2/
    chmod +x Mailcow-BackupV2/**/*.sh
    ```
 
-2. **Abhängigkeiten installieren**:
+   Alternativ steht ein Debian Packet zum Download zur Verfügung.
+
+   ```bash
+   wget https://github.com/the1andoni/mailcow-backupV2/releases/download/v2.0.0/mailcow-backup-v2.deb
+   ```
+
+3. **Abhängigkeiten installieren**:
 
    Sie können die Abhängigkeiten entweder manuell oder mit dem bereitgestellten Skript installieren:
 
@@ -65,7 +71,7 @@ Mailcow-BackupV2/
    sudo ./Dependencies/install_dependencies.sh
    ```
 
-3. **Setup ausführen**:
+4. **Setup ausführen**:
 
    Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und Cronjobs einzurichten:
 
