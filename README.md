@@ -45,7 +45,7 @@ Mailcow-BackupV2/
    git clone https://github.com/the1andoni/mailcow-backupV2.git 
    ```
    
-   Anschließend wechseln Sie in das neue Verzeichnis und die Scripte mithilfe folgendes befehles ausführbar machen.
+   Anschließend wechseln Sie in das neue Verzeichnis und machen die Scripte mithilfe folgendes Befehles ausführbar.
 
    ```bash
    chmod +x Mailcow-BackupV2/**/*.sh
