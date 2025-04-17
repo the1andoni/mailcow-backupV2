@@ -37,7 +37,21 @@ Mailcow-BackupV2/
 
 ## Installation
 
-1. **Abhängigkeiten installieren**:
+1. **Download Repository**:
+
+   Sie können das Repository mithilfe von GitClone einfach runterladen.
+
+   ```bash
+   git clone https://github.com/the1andoni/mailcow-backupV2.git 
+   ```
+   
+   Anschließend wechseln Sie in das neue Verzeichnis und machen die Scripte mithilfe folgendes Befehles ausführbar.
+
+   ```bash
+   chmod +x Mailcow-BackupV2/**/*.sh
+   ```
+
+2. **Abhängigkeiten installieren**:
 
    Sie können die Abhängigkeiten entweder manuell oder mit dem bereitgestellten Skript installieren:
 
@@ -51,7 +65,7 @@ Mailcow-BackupV2/
    sudo ./Dependencies/install_dependencies.sh
    ```
 
-2. **Setup ausführen**:
+3. **Setup ausführen**:
 
    Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und Cronjobs einzurichten:
 
@@ -84,6 +98,16 @@ Mailcow-BackupV2/
 ## Konfiguration
 
 Die Konfigurationsdateien werden während des Setups erstellt und verschlüsselt im Ordner `Configs` gespeichert. Sie enthalten sensible Informationen wie Zugangsdaten und sollten niemals unverschlüsselt gespeichert werden.
+
+## Hinweis zum `.Configs`-Ordner
+
+Der Ordner `.Configs` wird verwendet, um sensible Konfigurationsdateien zu speichern, die für den Betrieb des Skripts erforderlich sind. 
+
+- Eine leere Datei namens `.gitkeep` wurde hinzugefügt, um sicherzustellen, dass der Ordner in Git enthalten ist.
+- Bitte füge deine eigenen Konfigurationsdateien in diesen Ordner ein, nachdem du das Repository geklont hast. (Wird sonst automatisch vom `setup.sh`-Skript erstellt)
+- Achte darauf, dass sensible Daten wie Zugangsdaten sicher gespeichert werden und nicht versehentlich in das Repository hochgeladen werden.
+
+Falls der Ordner `.Configs` fehlt, wird er automatisch vom `setup.sh`-Skript erstellt.
 
 ## Automatisierung
 
