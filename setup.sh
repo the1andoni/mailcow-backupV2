@@ -66,7 +66,7 @@ if [ "$export_option" == "1" ] || [ "$export_option" == "3" ]; then
 
     # Cronjob für WebDAV-Upload einrichten
     echo "Richten Sie den Cronjob für den WebDAV-Upload ein."
-    read -p "Wie oft soll das Backup hochgeladen werden? (z.B. '0 2 * * *' für täglich um 2 Uhr): " cron_schedule
+    read -p "Wie oft soll das Backup hochgeladen werden? (z.B. '0 2 * * *' für täglich um 2 Uhr, Siehe https://crontab.guru für mehr.): " cron_schedule
     (crontab -l 2>/dev/null; echo "$cron_schedule bash $(pwd)/Upload/WebDAV-Upload.sh") | crontab -
 fi
 
@@ -102,7 +102,7 @@ fi
 
 # Cronjob für das Backup-Skript einrichten
 echo "Richten Sie den Cronjob für das Backup-Skript ein."
-read -p "Wie oft soll das Backup erstellt werden? (z.B. '0 1 * * *' für täglich um 1 Uhr): " backup_cron_schedule
+read -p "Wie oft soll das Backup erstellt werden? (z.B. '0 1 * * *' für täglich um 1 Uhr, Siehe https://crontab.guru für mehr.): " backup_cron_schedule
 (crontab -l 2>/dev/null; echo "$backup_cron_schedule bash $(pwd)/mailcow-backup.sh") | crontab -
 
 echo "Setup abgeschlossen! Die Cronjobs wurden erfolgreich eingerichtet."
