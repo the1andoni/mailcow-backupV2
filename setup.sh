@@ -7,6 +7,7 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 CONFIG_DIR="$(dirname "$0")/Configs"
+SCRIPT_DIR="$(dirname "$0")"
 mkdir -p "$CONFIG_DIR"
 
 echo "Willkommen zum Setup-Skript!"
@@ -63,11 +64,6 @@ if [ "$export_option" == "1" ] || [ "$export_option" == "3" ]; then
     # Verschlüsseln der Konfigurationsdatei
     echo "$gpg_password" | gpg --batch --passphrase-fd 0 --symmetric --cipher-algo AES256 --output "$CONFIG_DIR/webdav-config.sh.gpg" "$CONFIG_DIR/webdav-config.sh"
     rm "$CONFIG_DIR/webdav-config.sh"
-
-    # Cronjob für WebDAV-Upload einrichten
-    echo "Richten Sie den Cronjob für den WebDAV-Upload ein."
-    read -p "Wie oft soll das Backup hochgeladen werden? (z.B. '0 2 * * *' für täglich um 2 Uhr, Siehe https://crontab.guru für mehr.): " cron_schedule
-    (crontab -l 2>/dev/null; echo "$cron_schedule bash $(pwd)/Upload/WebDAV-Upload.sh") | crontab -
 fi
 
 if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
@@ -93,16 +89,72 @@ if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
     # Verschlüsseln der Konfigurationsdatei
     echo "$gpg_password" | gpg --batch --passphrase-fd 0 --symmetric --cipher-algo AES256 --output "$CONFIG_DIR/ftp-config.sh.gpg" "$CONFIG_DIR/ftp-config.sh"
     rm "$CONFIG_DIR/ftp-config.sh"
-
-    # Cronjob für FTP-Upload einrichten
-    echo "Richten Sie den Cronjob für den FTP-Upload ein."
-    read -p "Wie oft soll das Backup hochgeladen werden? (z.B. '0 2 * * *' für täglich um 2 Uhr): " cron_schedule
-    (crontab -l 2>/dev/null; echo "$cron_schedule bash $(pwd)/Upload/FTP-Upload.sh") | crontab -
 fi
 
-# Cronjob für das Backup-Skript einrichten
-echo "Richten Sie den Cronjob für das Backup-Skript ein."
-read -p "Wie oft soll das Backup erstellt werden? (z.B. '0 1 * * *' für täglich um 1 Uhr, Siehe https://crontab.guru für mehr.): " backup_cron_schedule
-(crontab -l 2>/dev/null; echo "$backup_cron_schedule bash $(pwd)/mailcow-backup.sh") | crontab -
+# Systemd-Timer für Backup einrichten
+echo "Bitte geben Sie die Uhrzeit für das tägliche Backup an (z. B. 01:00):"
+read -p "Backup-Zeit: " backup_time
+backup_hour=$(echo "$backup_time" | cut -d':' -f1)
+backup_minute=$(echo "$backup_time" | cut -d':' -f2)
 
-echo "Setup abgeschlossen! Die Cronjobs wurden erfolgreich eingerichtet."
+cat <<EOF | sudo tee /etc/systemd/system/mailcow-backup.service
+[Unit]
+Description=Mailcow Backup Service
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=$SCRIPT_DIR/mailcow-backup.sh
+EOF
+
+cat <<EOF | sudo tee /etc/systemd/system/mailcow-backup.timer
+[Unit]
+Description=Mailcow Backup Timer
+
+[Timer]
+OnCalendar=*-*-* $backup_hour:$backup_minute:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable --now mailcow-backup.timer
+
+# Optional: Systemd-Timer für Export einrichten
+echo "Möchten Sie einen automatischen Export einrichten? (y/n)"
+read -p "Eingabe: " export_choice
+if [ "$export_choice" == "y" ]; then
+    echo "Bitte geben Sie die Uhrzeit für den täglichen Export an (z. B. 02:00):"
+    read -p "Export-Zeit: " export_time
+    export_hour=$(echo "$export_time" | cut -d':' -f1)
+    export_minute=$(echo "$export_time" | cut -d':' -f2)
+
+    cat <<EOF | sudo tee /etc/systemd/system/mailcow-export.service
+[Unit]
+Description=Mailcow Export Service
+After=mailcow-backup.service
+
+[Service]
+Type=oneshot
+ExecStart=$SCRIPT_DIR/Upload/${export_option}-Upload.sh
+EOF
+
+    cat <<EOF | sudo tee /etc/systemd/system/mailcow-export.timer
+[Unit]
+Description=Mailcow Export Timer
+
+[Timer]
+OnCalendar=*-*-* $export_hour:$export_minute:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF
+
+    sudo systemctl daemon-reload
+    sudo systemctl enable --now mailcow-export.timer
+fi
+
+echo "Setup abgeschlossen! Die systemd-Timer wurden erfolgreich eingerichtet."

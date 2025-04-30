@@ -52,3 +52,6 @@ echo "[+] Archiv erfolgreich erstellt: $TAR_FILE"
 echo "[+] Lösche Backups, die älter als 7 Tage sind..."
 find "$BACKUP_DIR" -type f -name "*.tar.gz" -mtime +7 -exec rm -f {} \;
 echo "[✅] Alte Backups erfolgreich gelöscht."
+
+# Backup erfolgreich abgeschlossen
+echo "Backup abgeschlossen." > /tmp/mailcow-backup.status

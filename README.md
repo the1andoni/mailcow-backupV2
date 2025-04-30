@@ -23,7 +23,7 @@ mailcow-BackupV2/
 - **Automatisierte Backups**: Erstellt Backups von mailcow-Daten.
 - **Verschlüsselung**: Konfigurationsdateien werden mit GPG verschlüsselt.
 - **Remote-Upload**: Unterstützt WebDAV und FTP für das Hochladen von Backups.
-- **Cronjob-Integration**: Automatische Planung von Backups und Uploads.
+- **Systemd-Timer-Integration**: Automatische Planung von Backups und Uploads.
 - **Retention Management**: Löscht alte Backups lokal und remote basierend auf definierten Aufbewahrungszeiten.
 
 ## Voraussetzungen
@@ -32,8 +32,8 @@ mailcow-BackupV2/
 - Abhängigkeiten:
   - `gpg`
   - `curl`
-  - `cron`
   - `tar`
+  - `systemd`
 
 ## Installation
 
@@ -73,13 +73,13 @@ mailcow-BackupV2/
 
 4. **Setup ausführen**:
 
-   Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und Cronjobs einzurichten:
+   Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und systemd-Timer einzurichten:
 
    ```bash
    sudo ./setup.sh
    ```
 
-   Folgen Sie den Anweisungen im Skript, um die Backup-Methoden (WebDAV/FTP) und Aufbewahrungszeiten zu konfigurieren.
+   Folgen Sie den Anweisungen im Skript, um die Backup-Methoden (WebDAV/FTP), Aufbewahrungszeiten und Zeitpläne zu konfigurieren.
 
 ## Nutzung
 
@@ -101,6 +101,34 @@ mailcow-BackupV2/
   sudo ./Upload/FTP-Upload.sh
   ```
 
+- **Systemd-Timer für Backups verwalten**:
+  - **Status überprüfen**:
+    ```bash
+    systemctl status mailcow-backup.timer
+    ```
+  - **Manuell starten**:
+    ```bash
+    systemctl start mailcow-backup.service
+    ```
+  - **Deaktivieren**:
+    ```bash
+    systemctl disable mailcow-backup.timer
+    ```
+
+- **Systemd-Timer für Exporte verwalten**:
+  - **Status überprüfen**:
+    ```bash
+    systemctl status mailcow-export.timer
+    ```
+  - **Manuell starten**:
+    ```bash
+    systemctl start mailcow-export.service
+    ```
+  - **Deaktivieren**:
+    ```bash
+    systemctl disable mailcow-export.timer
+    ```
+
 ## Konfiguration
 
 Die Konfigurationsdateien werden während des Setups erstellt und verschlüsselt im Ordner `Configs` gespeichert. Sie enthalten sensible Informationen wie Zugangsdaten und sollten niemals unverschlüsselt gespeichert werden.
@@ -117,7 +145,16 @@ Falls der Ordner `.Configs` fehlt, wird er automatisch vom `setup.sh`-Skript ers
 
 ## Automatisierung
 
-Das Setup-Skript richtet automatisch Cronjobs ein, um Backups und Uploads regelmäßig auszuführen. Sie können die Cronjobs mit dem Befehl `crontab -l` überprüfen.
+Das Setup-Skript richtet automatisch systemd-Timer ein, um Backups und Uploads regelmäßig auszuführen. Die Timer können mit den folgenden Befehlen verwaltet werden:
+
+- **Backup-Timer**:
+  ```bash
+  systemctl status mailcow-backup.timer
+  ```
+- **Export-Timer**:
+  ```bash
+  systemctl status mailcow-export.timer
+  ```
 
 ## Sicherheit
 
