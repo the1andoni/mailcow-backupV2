@@ -1,11 +1,11 @@
-# Mailcow Backup Script V2
+# mailcow Backup Script V2
 
-Ein Bash-Skript zur Sicherung von Mailcow-Daten mit Unterstützung für WebDAV- und FTP-Uploads. Dieses Projekt ermöglicht es, automatisierte Backups zu erstellen, zu verschlüsseln und auf Remote-Server hochzuladen.
+Ein Bash-Skript zur Sicherung von mailcow-Daten mit Unterstützung für WebDAV- und FTP-Uploads. Dieses Projekt ermöglicht es, automatisierte Backups zu erstellen, zu verschlüsseln und auf Remote-Server hochzuladen.
 
 ## Ordnerstruktur
 
 ```
-Mailcow-BackupV2/
+mailcow-BackupV2/
 ├── mailcow-backup.sh
 ├── setup.sh
 ├── Dependencies/
@@ -20,7 +20,7 @@ Mailcow-BackupV2/
 
 ## Features
 
-- **Automatisierte Backups**: Erstellt Backups von Mailcow-Daten.
+- **Automatisierte Backups**: Erstellt Backups von mailcow-Daten.
 - **Verschlüsselung**: Konfigurationsdateien werden mit GPG verschlüsselt.
 - **Remote-Upload**: Unterstützt WebDAV und FTP für das Hochladen von Backups.
 - **Cronjob-Integration**: Automatische Planung von Backups und Uploads.
@@ -48,7 +48,7 @@ Mailcow-BackupV2/
    Anschließend wechseln Sie in das neue Verzeichnis und machen die Scripte mithilfe folgendes Befehles ausführbar.
 
    ```bash
-   chmod +x Mailcow-BackupV2/**/*.sh
+   chmod +x mailcow-BackupV2/**/*.sh
    ```
 
    Alternativ steht ein Debian Packet zum Download zur Verfügung.
