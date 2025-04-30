@@ -51,7 +51,7 @@ mailcow-BackupV2/
    chmod +x mailcow-BackupV2/**/*.sh
    ```
 
-   Alternativ steht ein Debian Packet zum Download zur Verfügung.
+   Alternativ steht ein Debian Packet zum Download zur Verfügung. (Aktuell nicht, nach Umstellung auf System Timern)
 
    ```bash
    wget https://github.com/the1andoni/mailcow-backupV2/releases/download/v2.0.0/mailcow-backup-v2.deb
