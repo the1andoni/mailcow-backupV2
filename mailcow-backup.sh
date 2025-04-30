@@ -23,10 +23,10 @@ TAR_FILE="$BACKUP_DIR/mailcow-backup-$DATE.tar.gz"
 sudo mkdir -p "$BACKUP_DIR"
 sudo mkdir -p "$BACKUP_PATH"
 
-echo "[+] Starte Mailcow-Backup..."
+echo "[+] Starte mailcow-Backup..."
 
-# Mailcow-Backup starten und Pfad direkt übergeben
-cd "$MAILCOW_DIR" || { echo "❌ Fehler: Mailcow-Verzeichnis nicht gefunden!"; exit 1; }
+# mailcow-Backup starten und Pfad direkt übergeben
+cd "$MAILCOW_DIR" || { echo "❌ Fehler: mailcow-Verzeichnis nicht gefunden!"; exit 1; }
 echo "$BACKUP_PATH" | ./helper-scripts/backup_and_restore.sh backup all --delete-days 7
 
 # Prüfen, ob das Backup erstellt wurde
