@@ -8,6 +8,9 @@ fi
 
 CONFIG_DIR="$(dirname "$0")/Configs"
 SCRIPT_DIR="$(dirname "$0")"
+BACKUP_SCRIPT="$SCRIPT_DIR/mailcow-backup.sh"
+FTP_UPLOAD_SCRIPT="$SCRIPT_DIR/Upload/FTP-Upload.sh"
+WEBDAV_UPLOAD_SCRIPT="$SCRIPT_DIR/Upload/WebDAV-Upload.sh"
 mkdir -p "$CONFIG_DIR"
 
 echo "Willkommen zum Setup-Skript!"
@@ -92,28 +95,56 @@ if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
 fi
 
 # Systemd-Timer für Backup einrichten
-echo "Bitte geben Sie die Uhrzeit für das tägliche Backup an (z. B. 01:00):"
-read -p "Backup-Zeit: " backup_time
-backup_hour=$(echo "$backup_time" | cut -d':' -f1)
-backup_minute=$(echo "$backup_time" | cut -d':' -f2)
+echo "Wie häufig soll das Backup ausgeführt werden?"
+echo "1) Täglich"
+echo "2) Wöchentlich"
+echo "3) Monatlich"
+read -p "Bitte wählen Sie eine Option (1, 2 oder 3): " frequency
+
+case $frequency in
+  1)
+    echo "Bitte geben Sie die Uhrzeit für das tägliche Backup an (z. B. 02:00):"
+    read -p "Backup-Zeit: " backup_time
+    schedule="*-*-* ${backup_time}:00"
+    ;;
+  2)
+    echo "Bitte geben Sie den Wochentag und die Uhrzeit für das wöchentliche Backup an (z. B. Sun 02:00):"
+    read -p "Backup-Zeit: " backup_time
+    schedule="${backup_time}:00"
+    ;;
+  3)
+    echo "Bitte geben Sie den Tag des Monats und die Uhrzeit für das monatliche Backup an (z. B. 1 02:00):"
+    read -p "Backup-Zeit: " backup_time
+    schedule="*-*-${backup_time}:00"
+    ;;
+  *)
+    echo "Ungültige Auswahl. Standardmäßig wird das Backup täglich um 02:00 ausgeführt."
+    schedule="*-*-* 02:00:00"
+    ;;
+esac
 
 cat <<EOF | sudo tee /etc/systemd/system/mailcow-backup.service
 [Unit]
-Description=Mailcow Backup Service
-After=network.target
+Description=Mailcow Backup Script
 
 [Service]
 Type=oneshot
-ExecStart=$SCRIPT_DIR/mailcow-backup.sh
+ExecStart=/bin/bash $BACKUP_SCRIPT
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
 cat <<EOF | sudo tee /etc/systemd/system/mailcow-backup.timer
 [Unit]
-Description=Mailcow Backup Timer
+Description=Run Mailcow Backup
 
 [Timer]
-OnCalendar=*-*-* $backup_hour:$backup_minute:00
+OnCalendar=$schedule
 Persistent=true
+Unit=mailcow-backup.service
 
 [Install]
 WantedBy=timers.target
@@ -122,39 +153,67 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable --now mailcow-backup.timer
 
-# Optional: Systemd-Timer für Export einrichten
-echo "Möchten Sie einen automatischen Export einrichten? (y/n)"
-read -p "Eingabe: " export_choice
-if [ "$export_choice" == "y" ]; then
-    echo "Bitte geben Sie die Uhrzeit für den täglichen Export an (z. B. 02:00):"
-    read -p "Export-Zeit: " export_time
-    export_hour=$(echo "$export_time" | cut -d':' -f1)
-    export_minute=$(echo "$export_time" | cut -d':' -f2)
+# Systemd-Timer für FTP-Upload einrichten
+echo "Möchten Sie einen automatischen FTP-Upload einrichten? (y/n)"
+read -p "Eingabe: " ftp_upload_choice
+if [ "$ftp_upload_choice" == "y" ]; then
+    echo "Wie häufig soll der FTP-Upload ausgeführt werden?"
+    echo "1) Täglich"
+    echo "2) Wöchentlich"
+    echo "3) Monatlich"
+    read -p "Bitte wählen Sie eine Option (1, 2 oder 3): " ftp_frequency
 
-    cat <<EOF | sudo tee /etc/systemd/system/mailcow-export.service
+    case $ftp_frequency in
+      1)
+        echo "Bitte geben Sie die Uhrzeit für den täglichen FTP-Upload an (z. B. 03:00):"
+        read -p "FTP-Upload-Zeit: " ftp_upload_time
+        ftp_schedule="*-*-* ${ftp_upload_time}:00"
+        ;;
+      2)
+        echo "Bitte geben Sie den Wochentag und die Uhrzeit für den wöchentlichen FTP-Upload an (z. B. Sun 03:00):"
+        read -p "FTP-Upload-Zeit: " ftp_upload_time
+        ftp_schedule="${ftp_upload_time}:00"
+        ;;
+      3)
+        echo "Bitte geben Sie den Tag des Monats und die Uhrzeit für den monatlichen FTP-Upload an (z. B. 1 03:00):"
+        read -p "FTP-Upload-Zeit: " ftp_upload_time
+        ftp_schedule="*-*-${ftp_upload_time}:00"
+        ;;
+      *)
+        echo "Ungültige Auswahl. Standardmäßig wird der FTP-Upload täglich um 03:00 ausgeführt."
+        ftp_schedule="*-*-* 03:00:00"
+        ;;
+    esac
+
+    cat <<EOF | sudo tee /etc/systemd/system/mailcow-ftp-upload.service
 [Unit]
-Description=Mailcow Export Service
-After=mailcow-backup.service
+Description=Mailcow FTP Upload Script
 
 [Service]
 Type=oneshot
-ExecStart=$SCRIPT_DIR/Upload/${export_option}-Upload.sh
+ExecStart=/bin/bash $FTP_UPLOAD_SCRIPT
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
 EOF
 
-    cat <<EOF | sudo tee /etc/systemd/system/mailcow-export.timer
+    cat <<EOF | sudo tee /etc/systemd/system/mailcow-ftp-upload.timer
 [Unit]
-Description=Mailcow Export Timer
+Description=Run Mailcow FTP Upload
 
 [Timer]
-OnCalendar=*-*-* $export_hour:$export_minute:00
+OnCalendar=$ftp_schedule
 Persistent=true
+Unit=mailcow-ftp-upload.service
 
 [Install]
 WantedBy=timers.target
 EOF
 
     sudo systemctl daemon-reload
-    sudo systemctl enable --now mailcow-export.timer
+    sudo systemctl enable --now mailcow-ftp-upload.timer
 fi
 
 echo "Setup abgeschlossen! Die systemd-Timer wurden erfolgreich eingerichtet."
