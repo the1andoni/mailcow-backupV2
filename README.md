@@ -162,8 +162,32 @@ Das Setup-Skript richtet automatisch systemd-Timer ein, um Backups und Uploads r
 - Für FTP-Uploads kann ein Zertifikat-Fingerabdruck angegeben werden, um die Verbindung abzusichern.
 
 ## Lizenz
+Dieses Projekt steht unter der **CyberSpaceConsulting Public License v1.0**.  
+Die vollständigen Lizenzbedingungen findest du in der [LICENSE](LICENSE)-Datei.
 
-Dieses Projekt steht unter der MIT-Lizenz.
+### Wichtige Punkte der Lizenz:
+1. **Keine Weiterveräußerung oder öffentliche Verbreitung**:  
+   Die Software darf nicht verkauft, unterlizenziert oder öffentlich weiterverbreitet werden, ohne vorherige schriftliche Genehmigung von CyberSpaceConsulting.
+   
+2. **Zentrale Verwaltung**:  
+   Alle offiziellen Versionen und Updates werden ausschließlich über das ursprüngliche Repository verwaltet.
+
+3. **Attribution erforderlich**:  
+   Jede Nutzung oder Bereitstellung der Software muss die Herkunft des Projekts klar angeben:  
+   "CyberSpaceConsulting – Original source available at the official repository."
+
+4. **Kommerzielle Nutzung erlaubt (mit Einschränkungen)**:  
+   Die Software darf in kommerziellen Kontexten verwendet werden, jedoch nicht als eigenständiges Produkt oder Dienstleistung weiterverkauft werden.
+
+5. **Keine Garantie**:  
+   Die Software wird "wie besehen" bereitgestellt, ohne jegliche Garantien oder Gewährleistungen.
+
+6. **Verbotene Nutzung in KI-Training**:  
+   Die Software darf nicht für das Training oder Fine-Tuning von KI-Modellen verwendet werden, ohne ausdrückliche Genehmigung.
+
+Für weitere Informationen oder Genehmigungen, kontaktiere:  
+📧 license@cyberspaceconsulting.de
+
 
 ---
 
