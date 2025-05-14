@@ -48,7 +48,7 @@ mailcow-BackupV2/
    Anschließend wechseln Sie in das neue Verzeichnis und machen die Scripte mithilfe folgendes Befehles ausführbar.
 
    ```bash
-   chmod +x mailcow-BackupV2/**/*.sh
+   chmod +x mailcow-backupV2/**/*.sh
    ```
 
    Alternativ steht ein Debian Packet zum Download zur Verfügung. (Aktuell nicht, nach Umstellung auf System Timern)
