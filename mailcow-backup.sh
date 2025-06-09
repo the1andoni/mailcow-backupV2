@@ -10,6 +10,14 @@ fi
 echo "Bitte geben Sie das GPG-Passwort ein:"
 read -s -p "Passwort: " gpg_password
 echo
+# GPG-Passwort aus sicherer Datei lesen (z.B. /root/.mailcow-gpg-pass)
+GPG_PASS_FILE="/root/.mailcow-gpg-pass"
+if [ ! -f "$GPG_PASS_FILE" ]; then
+  echo "❌ Fehler: GPG-Passwortdatei $GPG_PASS_FILE nicht gefunden!"
+  exit 1
+fi
+gpg_password=$(cat "$GPG_PASS_FILE")
+
 source <(echo "$gpg_password" | gpg --quiet --batch --passphrase-fd 0 --decrypt "$CONFIG_DIR/mailcow-config.sh.gpg")
 
 # Variablen

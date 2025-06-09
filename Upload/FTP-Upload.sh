@@ -14,9 +14,12 @@ fi
 
 # Konfigurationsdatei entschlüsseln und laden
 CONFIG_DIR="$(dirname "$0")/../Configs"
-echo "Bitte geben Sie das GPG-Passwort ein:"
-read -s -p "Passwort: " gpg_password
-echo
+GPG_PASS_FILE="/root/.mailcow-gpg-pass"
+if [ ! -f "$GPG_PASS_FILE" ]; then
+  echo "❌ Fehler: GPG-Passwortdatei $GPG_PASS_FILE nicht gefunden!"
+  exit 1
+fi
+gpg_password=$(cat "$GPG_PASS_FILE")
 source <(echo "$gpg_password" | gpg --quiet --batch --passphrase-fd 0 --decrypt "$CONFIG_DIR/ftp-config.sh.gpg")
 
 # Variablen

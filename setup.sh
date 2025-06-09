@@ -24,6 +24,11 @@ export GPG_TTY=$(tty) # Für GPG-Agent-Kompatibilität
 # GPG-Agent initialisieren
 echo "$gpg_password" | gpg --batch --passphrase-fd 0 --symmetric --cipher-algo AES256 --output /dev/null <<< "Test"
 
+# GPG-Passwort sicher in /root/.mailcow-gpg-pass speichern
+echo "$gpg_password" | sudo tee /root/.mailcow-gpg-pass > /dev/null
+sudo chmod 600 /root/.mailcow-gpg-pass
+echo "Das GPG-Passwort wurde sicher in /root/.mailcow-gpg-pass gespeichert."
+
 # Prüfen, ob bestehende Konfigurationen überschrieben werden sollen
 if [ -f "$CONFIG_DIR/ftp-config.sh.gpg" ] || [ -f "$CONFIG_DIR/webdav-config.sh.gpg" ]; then
   echo "Es existieren bereits Konfigurationsdateien. Möchten Sie diese überschreiben? (y/n)"
@@ -214,6 +219,41 @@ EOF
 
     sudo systemctl daemon-reload
     sudo systemctl enable --now mailcow-ftp-upload.timer
+fi
+
+# Systemd-Timer für WebDAV-Upload einrichten
+echo "Möchten Sie einen automatischen WebDAV-Upload einrichten? (y/n)"
+read -r webdav_upload
+if [[ "$webdav_upload" =~ ^[Yy]$ ]]; then
+  cat <<EOF | sudo tee /etc/systemd/system/mailcow-webdav-upload.service
+[Unit]
+Description=Mailcow WebDAV Upload Script
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash $WEBDAV_UPLOAD_SCRIPT
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+  cat <<EOF | sudo tee /etc/systemd/system/mailcow-webdav-upload.timer
+[Unit]
+Description=Run Mailcow WebDAV Upload
+
+[Timer]
+OnCalendar=$schedule
+Persistent=true
+Unit=mailcow-webdav-upload.service
+
+[Install]
+WantedBy=timers.target
+EOF
+
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now mailcow-webdav-upload.timer
 fi
 
 echo "Setup abgeschlossen! Die systemd-Timer wurden erfolgreich eingerichtet."

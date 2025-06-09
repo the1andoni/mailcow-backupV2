@@ -37,7 +37,7 @@ mailcow-BackupV2/
 
 ## Installation
 
-1. **Download Repository**:
+1. **Repository herunterladen**:
 
    Sie können das Repository mithilfe von GitClone einfach runterladen.
 
@@ -57,7 +57,7 @@ mailcow-BackupV2/
    wget https://github.com/the1andoni/mailcow-backupV2/releases/download/v2.0.0/mailcow-backup-v2.deb
    ```
 
-3. **Abhängigkeiten installieren**:
+2. **Abhängigkeiten installieren**:
 
    Sie können die Abhängigkeiten entweder manuell oder mit dem bereitgestellten Skript installieren:
 
@@ -71,7 +71,7 @@ mailcow-BackupV2/
    sudo ./Dependencies/install_dependencies.sh
    ```
 
-4. **Setup ausführen**:
+3. **Setup ausführen**:
 
    Starten Sie das Setup-Skript, um die Konfigurationen zu erstellen und systemd-Timer einzurichten:
 
@@ -80,6 +80,19 @@ mailcow-BackupV2/
    ```
 
    Folgen Sie den Anweisungen im Skript, um die Backup-Methoden (WebDAV/FTP), Aufbewahrungszeiten und Zeitpläne zu konfigurieren.
+
+## Automatisierte Backups & GPG-Passwort
+
+Damit geplante Backups und Uploads ohne Interaktion funktionieren, wird das GPG-Passwort während des Setups automatisch in einer Datei (`/root/.mailcow-gpg-pass`) gespeichert.  
+**Achtung:** Die Datei ist nur für root lesbar und wird vom Setup-Skript wie folgt angelegt:
+
+```bash
+echo "DEIN_GPG_PASSWORT" | sudo tee /root/.mailcow-gpg-pass > /dev/null
+sudo chmod 600 /root/.mailcow-gpg-pass
+```
+
+Das Backup-Skript liest dieses Passwort automatisch ein und entschlüsselt damit die Konfiguration.  
+**Hinweis:** Ändere das Passwort in dieser Datei nur, wenn du auch die Konfiguration neu verschlüsselst!
 
 ## Nutzung
 
@@ -160,6 +173,7 @@ Das Setup-Skript richtet automatisch systemd-Timer ein, um Backups und Uploads r
 
 - Die Konfigurationsdateien werden mit GPG verschlüsselt, um sensible Daten zu schützen.
 - Für FTP-Uploads kann ein Zertifikat-Fingerabdruck angegeben werden, um die Verbindung abzusichern.
+- Das GPG-Passwort wird sicher in `/root/.mailcow-gpg-pass` abgelegt und ist nur für root lesbar.
 
 ## Lizenz
 Dieses Projekt steht unter der **CyberSpaceConsulting Public License v1.0**.  
@@ -187,7 +201,6 @@ Die vollständigen Lizenzbedingungen findest du in der [LICENSE](LICENSE)-Datei.
 
 Für weitere Informationen oder Genehmigungen, kontaktiere:  
 📧 license@cyberspaceconsulting.de
-
 
 ---
 
