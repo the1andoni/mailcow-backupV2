@@ -62,6 +62,9 @@ if [ "$export_option" == "1" ] || [ "$export_option" == "3" ]; then
     read -s -p "Passwort: " webdav_password
     echo
 
+    # Vorherige unverschlüsselte Datei löschen, falls vorhanden
+    rm -f "$CONFIG_DIR/webdav-config.sh"
+
     # Speichere die WebDAV-Konfiguration
     echo "WEBDAV_URL=\"$webdav_url\"" > "$CONFIG_DIR/webdav-config.sh"
     echo "WEBDAV_USER=\"$webdav_user\"" >> "$CONFIG_DIR/webdav-config.sh"
@@ -71,7 +74,7 @@ if [ "$export_option" == "1" ] || [ "$export_option" == "3" ]; then
 
     # Verschlüsseln der Konfigurationsdatei
     echo "$gpg_password" | gpg --batch --passphrase-fd 0 --symmetric --cipher-algo AES256 --output "$CONFIG_DIR/webdav-config.sh.gpg" "$CONFIG_DIR/webdav-config.sh"
-    rm "$CONFIG_DIR/webdav-config.sh"
+    rm -f "$CONFIG_DIR/webdav-config.sh"
 fi
 
 if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
@@ -86,6 +89,9 @@ if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
     read -p "Zertifikat-Fingerabdruck: " ftp_certificate_fingerprint
     echo
 
+    # Vorherige unverschlüsselte Datei löschen, falls vorhanden
+    rm -f "$CONFIG_DIR/ftp-config.sh"
+
     # Speichere die FTP-Konfiguration
     echo "FTP_SERVER=\"$ftp_server\"" > "$CONFIG_DIR/ftp-config.sh"
     echo "FTP_USER=\"$ftp_user\"" >> "$CONFIG_DIR/ftp-config.sh"
@@ -96,7 +102,7 @@ if [ "$export_option" == "2" ] || [ "$export_option" == "3" ]; then
 
     # Verschlüsseln der Konfigurationsdatei
     echo "$gpg_password" | gpg --batch --passphrase-fd 0 --symmetric --cipher-algo AES256 --output "$CONFIG_DIR/ftp-config.sh.gpg" "$CONFIG_DIR/ftp-config.sh"
-    rm "$CONFIG_DIR/ftp-config.sh"
+    rm -f "$CONFIG_DIR/ftp-config.sh"
 fi
 
 # Systemd-Timer für Backup einrichten
