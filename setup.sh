@@ -225,6 +225,34 @@ fi
 echo "Möchten Sie einen automatischen WebDAV-Upload einrichten? (y/n)"
 read -r webdav_upload
 if [[ "$webdav_upload" =~ ^[Yy]$ ]]; then
+  echo "Wie häufig soll der WebDAV-Upload ausgeführt werden?"
+  echo "1) Täglich"
+  echo "2) Wöchentlich"
+  echo "3) Monatlich"
+  read -p "Bitte wählen Sie eine Option (1, 2 oder 3): " webdav_frequency
+
+  case $webdav_frequency in
+    1)
+      echo "Bitte geben Sie die Uhrzeit für den täglichen WebDAV-Upload an (z. B. 04:00):"
+      read -p "WebDAV-Upload-Zeit: " webdav_upload_time
+      webdav_schedule="*-*-* ${webdav_upload_time}:00"
+      ;;
+    2)
+      echo "Bitte geben Sie den Wochentag und die Uhrzeit für den wöchentlichen WebDAV-Upload an (z. B. Sun 04:00):"
+      read -p "WebDAV-Upload-Zeit: " webdav_upload_time
+      webdav_schedule="${webdav_upload_time}:00"
+      ;;
+    3)
+      echo "Bitte geben Sie den Tag des Monats und die Uhrzeit für den monatlichen WebDAV-Upload an (z. B. 1 04:00):"
+      read -p "WebDAV-Upload-Zeit: " webdav_upload_time
+      webdav_schedule="*-*-${webdav_upload_time}:00"
+      ;;
+    *)
+      echo "Ungültige Auswahl. Standardmäßig wird der WebDAV-Upload täglich um 04:00 ausgeführt."
+      webdav_schedule="*-*-* 04:00:00"
+      ;;
+  esac
+
   cat <<EOF | sudo tee /etc/systemd/system/mailcow-webdav-upload.service
 [Unit]
 Description=Mailcow WebDAV Upload Script
@@ -244,7 +272,7 @@ EOF
 Description=Run Mailcow WebDAV Upload
 
 [Timer]
-OnCalendar=$schedule
+OnCalendar=$webdav_schedule
 Persistent=true
 Unit=mailcow-webdav-upload.service
 
